@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    Add Post
+{% endblock %}
+
+{% block main %}
+<h1>Add A Post</h1>
+
+<div class="page">
+
+    {% from "includes/_formhelpers.html" import render_field %}
+    <form method="POST" action="" enctype="multipart/form-data">
+        <div class="form-group">
+            {{ render_field(form.title, class_="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ render_field(form.body, class_="form-control", id="editor") }}
+        </div>
+        <div class="form-group">
+            <label>Image</label>
+            <input type="file" class="form-control-file" name="image" accept="uploads/">
+        </div>
+        <div class="form-check">
+            {{ render_field(form.category, class_="radio" )}}
+        </div>
+        <div class="form-check">
+            {{ render_field(form.anonymous, class_="radio" )}}
+        </div>
+        <button class="btn btn-primary" type="submit">Tweet</button>
+    </form>
+</div>
+{% endblock %}

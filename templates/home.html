@@ -5,8 +5,39 @@
 {% endblock %}
 
 {% block main %}
-    <div class="jumbotron text-center">
-        <h3>Welcome To IdeaInferno</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laudantium ullam aut praesentium maiores, eum aliquam!</p>
+    <div class="jumbotron">
+        <h3>Welcome <small>{{session['username']}}</small></h3>
+    </div>
+    <div class="page home">
+        <div class="nav bg-light">
+            <h4 class="display-6">IdeaInferno</h4>
+            <a href="{{url_for('add_post')}}" class="display-5 btn btn-primary">+Add Post</a>
+        </div>
+        <div class="home-content">
+            <div class="posts">
+                {% for post in posts %}
+                <div class="posts-info text-center" >
+                    <div class="post-head">
+                        
+                        <h3 class="display-6">{{ post.title }} </h3>
+                        <p class="author">
+                            By  
+                            {% if post['is_anonymous'] == 1 %}
+                            <strong>anonymous user</strong>
+                            {% else %}
+                            <strong>{{post.author}}</strong>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <p class="display-6">Category: <small>{{post.category}}</small> </p>
+                    <p>Likes: {{ post.likes }}</p>
+                    <a href="#">View</a>
+                </div>
+                {% else %}
+                <p>No Post Found</p>
+        
+                {% endfor %}
+            </div>
+        </div>
     </div>
 {% endblock %}

@@ -6,7 +6,7 @@ import urllib
 import uuid
 import re
 
-from flask import redirect, render_template, request, session
+from flask import redirect, render_template, request, session, url_for, flash
 from functools import wraps
 
 def valid_email(email):
@@ -29,3 +29,16 @@ def login_required(f):
         return f(*args, **kwargs)
 
     return decorated_function
+
+# Check if user logged in
+def is_logged_in(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if 'logged_in' in session:
+            return f(*args, **kwargs)
+        elif 'admin' in session:
+            return f(*args, **kwargs)
+        else:
+            flash('Unauthorized, Please login', 'danger')
+            return redirect(url_for('login'))
+    return wrap

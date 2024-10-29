@@ -1,0 +1,66 @@
+body{
+    overflow-y: scroll;
+}
+
+.radio {
+    align-items: center;
+    display: flex;
+    gap: 10px;
+    list-style-type: none;
+    list-style: none;
+    text-decoration: none;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    margin-bottom: 20px;
+}
+
+button{
+    margin-top: 20px;
+}
+
+.page{
+    padding: 10px;
+    border: 1px solid #000;
+}
+
+.home{
+    height: 100vh;
+    overflow-y: scroll;
+}
+
+.nav{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+}
+
+.posts {
+    padding: 40px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.posts-info {
+    line-height: 1.5;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    height: 300px;
+    box-shadow: 2px 4px 16px rgba(0, 0, 0, .1);
+    margin-bottom: 30px;
+}
+
+.post-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.author{
+    font-size: 20px;
+    border: 1px solid #ccc;
+    padding: 7px;
+    border-radius: 15px;
+}
