@@ -17,5 +17,19 @@ CREATE TABLE posts (
     category TEXT NOT NULL,
     file_path TEXT,
     likes INTEGER DEFAULT 0,
+    posted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     is_anonymous BOOLEAN DEFAULT 0
 );
+
+CREATE TABLE comments (
+    id INTEGER PRIMARY KEY,
+    post_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    user_name TEXT NOT NULL,
+    parent_comment_id INTEGER,
+    content TEXT NOT NULL,
+    likes INTEGER DEFAULT 0,
+    posted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    is_anonymous BOOLEAN DEFAULT 0
+);
+

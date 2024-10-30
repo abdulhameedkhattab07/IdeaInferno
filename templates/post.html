@@ -1,0 +1,75 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+Post {{post.title}}
+{% endblock %}
+
+{% block main %}
+<div class="page home">
+
+    <div class="post-head">
+        <h1 class="display-6">{{post.title}} <small>likes: <span class="like">{{post.likes}}</span></small></h1>
+        <h4>By:
+            {% if post.author == session.username %}
+            <span class="author">You</span>
+            {% elif post['is_anonymous'] == 1 %}
+            <span class="author">anonymous user</span>
+            {% else %}
+            <span class="author">{{post.author}}</span>
+            {% endif %}
+        </h4>
+    </div>
+
+    {% if post.file_path != None %}
+    <img src="{{ url_for('static_dir', path = 'uploads/'+post.file_path) }}" class="img" alt="...">
+    {% endif %}
+    <div>
+        <div class="post-body">
+            {{post.body | safe}}
+        </div>
+        <hr>
+        {% if session.username != post.author %}
+        <div class="radio">
+            <form action="{{url_for('like_post', id=post.id)}}" method="post">
+                <input type="hidden" name="_method" value="LIKE">
+                <input type="submit" value="Like" class="btn btn-primary">
+            </form>
+            <form action="{{url_for('unlike_post', id=post.id)}}" method="post">
+                <input type="hidden" name="_method" value="UNLIKE">
+                <input type="submit" value="Unlike" class="btn btn-primary">
+            </form>
+        </div>
+        {% else %}
+        {% endif %}
+
+        <div class="comments-section">
+            <h2 class="display-6">Comments <span class="like">{{no_of_comments}}</span></h2>
+            {% if session.username %}
+            <form action="{{url_for('add_comment')}}" method="post">
+                <div class="form-group form">
+                    <input class="form-control" type="text" name="text" placeholder="Add a comment...">
+                    <input type="hidden" name="post_id" value="{{post.id}}">
+                    <button class="btn btn-primary" type="submit">Comment</button>
+                </div>
+            </form>
+            {% endif %}
+            <div id="comments-container">
+                {% for comment in comments %}
+                    <div class="comment">
+                        <p>{{comment.content}}</p>
+                        {% if comment.user_name == session.username %}
+                        <p>By: <span class="author">You</span></p>
+                        {% else %}
+                        <p>By: <span class="author">{{comment.user_name}}</span></p>
+                        {% endif %}
+                    </div>
+                {% else %}
+                <p>No Comments Yet</p>
+                {% endfor %}
+            </div>
+        </div>
+        <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+    </div>
+</div>
+<hr>
+{% endblock %}

@@ -5,13 +5,15 @@
 {% endblock %}
 
 {% block main %}
-    <div class="jumbotron">
-        <h3>Welcome <small>{{session['username']}}</small></h3>
-    </div>
+    <h3 class="display-6">Welcome <small>{{session['username']}}</small></h3>
+    
     <div class="page home">
         <div class="nav bg-light">
             <h4 class="display-6">IdeaInferno</h4>
-            <a href="{{url_for('add_post')}}" class="display-5 btn btn-primary">+Add Post</a>
+            <div class="nav">
+                <div class="profile">{{profile}}</div>
+                <a href="{{url_for('add_post')}}" class="display-5 btn btn-primary">+Add Post</a>
+            </div>
         </div>
         <div class="home-content">
             <div class="posts">
@@ -22,8 +24,10 @@
                         <h3 class="display-6">{{ post.title }} </h3>
                         <p class="author">
                             By  
-                            {% if post['is_anonymous'] == 1 %}
-                            <strong>anonymous user</strong>
+                            {% if post.author == session.username %}
+                            <strong>You</strong>
+                            {% elif post['is_anonymous'] == 1 %}
+                            <strong>Anonymous</strong>
                             {% else %}
                             <strong>{{post.author}}</strong>
                             {% endif %}
@@ -31,7 +35,7 @@
                     </div>
                     <p class="display-6">Category: <small>{{post.category}}</small> </p>
                     <p>Likes: {{ post.likes }}</p>
-                    <a href="#">View</a>
+                    <a href="{{url_for('post', id=post.id)}}">View</a>
                 </div>
                 {% else %}
                 <p>No Post Found</p>

@@ -92,12 +92,12 @@ def login():
         
         if len(result) != 1:
             # ensure username exist
-            error = 'Username Does Not Exist'
-            return render_template('login.html', error=error)
+            flash('Username Does Not Exist', 'danger')
+            return redirect(url_for('login'))
         #compare passwords
         if not check_password_hash(result[0]['password'], password_candidate): 
-            error = 'Invalid login'
-            return render_template('login.html', error=error)
+            flash('Invalid Password', 'danger')
+            return redirect(url_for('login'))
         else:
             session['logged_in'] = True
             session['username'] = username
@@ -122,8 +122,10 @@ def logout():
 @app.route("/home")
 @is_logged_in
 def home():
-    posts = db.execute("SELECT * FROM posts")
-    return render_template('home.html', posts=posts)
+    username = session['username']
+    profile = username[0].capitalize()
+    posts = db.execute("SELECT * FROM posts ORDER BY posted_at DESC")
+    return render_template('home.html', posts=posts, profile=profile)
 
 #add post
 @app.route('/add_post', methods=['GET', 'POST'])
@@ -154,6 +156,55 @@ def add_post():
         return redirect(url_for('home'))
         
     return render_template('add_post.html', form=form)
+
+#single article
+@app.route("/post/<string:id>")
+def post(id):
+    post = db.execute("SELECT * FROM posts WHERE id = ?", id)[0]
+    comments = db.execute("SELECT * FROM comments WHERE post_id = ?", id)
+    no_of_comments = db.execute('SELECT COUNT(*) FROM comments WHERE post_id = ?', id)[0]['COUNT(*)']
+    return render_template('post.html', post=post, comments=comments, no_of_comments=no_of_comments)
+
+#add comment
+@app.route('/dashboard/add_comment', methods=['POST'])
+@is_logged_in
+def add_comment():
+    text = request.form.get('text')
+    post_id = request.form.get('post_id')
+    username = session['username']
+    if not text:
+        flash('Please Enter a text', 'danger')
+        return redirect(url_for('post', id=post_id))
+    db.execute('INSERT INTO comments (post_id, user_name, user_id, content) VALUES (?, ?, ?, ?)', post_id, username, session['id'], text)
+    
+    return redirect(url_for('post', id=post_id))
+
+
+#like Article
+@app.route('/like_post/<string:id>', methods=['POST'])
+@is_logged_in
+def like_post(id):
+    #execute
+    likes = db.execute('SELECT likes FROM posts WHERE id = ?', id)[0]['likes']
+    likes += 1
+    db.execute('UPDATE posts SET likes = ? WHERE id = ?', likes, id)
+
+    return redirect(url_for('post', id=id))
+
+#unlike Article
+@app.route('/unlike_post/<string:id>', methods=['POST'])
+@is_logged_in
+def unlike_post(id):
+
+    #execute
+    likes = db.execute('SELECT likes FROM posts WHERE id = ?', id)[0]['likes']
+    if likes > 0:
+        likes -= 1
+    else:
+        likes = likes
+    db.execute('UPDATE posts SET likes = ? WHERE id = ?', likes, id)
+
+    return redirect(url_for('post', id=id))
 
 if __name__ == "__main__":
     app.secret_key= 'abdulhameedkhattab07'
