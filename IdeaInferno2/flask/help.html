@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Modal</title>
+    <style>
+        /* Basic styling for the modal */
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        #openModalBtn {
+            padding: 10px 20px;
+            background-color: #d9534f;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Modal background */
+        .modal {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        /* Modal content */
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 400px;
+            position: relative;
+            text-align: center;
+        }
+
+        .modal-content h2 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        /* Close button */
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: #aaa;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Form styling */
+        .form-row {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .form-row label {
+            display: block;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .form-row input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .register-btn {
+            background-color: #d9534f;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .register-btn:hover {
+            background-color: #c9302c;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Button to Open the Modal -->
+    <button id="openModalBtn">Register Yourself</button>
+
+    <!-- Modal Structure -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Register Yourself</h2>
+
+            <form id="registerForm">
+                <div class="form-row">
+                    <label>First Name *</label>
+                    <input type="text" placeholder="Enter your first name">
+                </div>
+
+                <div class="form-row">
+                    <label>Last Name *</label>
+                    <input type="text" placeholder="Enter your last name">
+                </div>
+
+                <div class="form-row">
+                    <label>Email *</label>
+                    <input type="email" placeholder="Enter your email">
+                </div>
+
+                <div class="form-row">
+                    <label>Mobile *</label>
+                    <input type="text" placeholder="Enter your mobile">
+                </div>
+
+                <div class="form-row">
+                    <label>Password *</label>
+                    <input type="password" placeholder="Enter new password">
+                </div>
+
+                <div class="form-row">
+                    <label>Captcha *</label>
+                    <input type="text" placeholder="Enter captcha value">
+                </div>
+
+                <button type="submit" class="register-btn">REGISTER NOW</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Get modal element
+        var modal = document.getElementById("modal");
+
+        // Get button that opens the modal
+        var btn = document.getElementById("openModalBtn");
+
+        // Get the <span> element that closes the modal
+        var closeBtn = document.getElementsByClassName("close")[0];
+
+        // When the user clicks the button, open the modal 
+        btn.onclick = function () {
+            modal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        closeBtn.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+    </script>
+</body>
+
+</html>

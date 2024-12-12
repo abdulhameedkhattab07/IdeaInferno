@@ -1,0 +1,134 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block main %}
+<h3 class="display-6">Welcome <strong><small>{{session['username']}}</small></strong></h3>
+
+<div class="page home">
+    <div class="nav bg-light">
+        <h4 class="display-6">IdeaInferno</h4>
+        <div class="nav">
+            <a href="{{url_for('inbox')}}" class="notification-icon">
+                <span class="notification-img">
+                    <img id="open-inbox" onclick="openInbox()" src="/static/images/Message.png" alt="">
+                </span>
+                {% if unread_message > 0 %}
+                    <span class="badge">
+                        {% if unread_message > 9 %}
+                        9+
+                        {% else %}
+                        {{ unread_message }}
+                        {% endif %}
+                    </span>
+                {% endif %}
+            </a>
+            <a href="#" class="notification-icon">
+                <span class="notification-img">
+                    <img id="open-notification" src="/static/images/bell.svg" onclick="openNotificationModal()" alt="">
+                </span>
+                {% if unread_count > 0 %}
+                    <span class="badge">
+                        {% if unread_count > 9 %}
+                        9+
+                        {% else %}
+                        {{ unread_count }}
+                        {% endif %}
+                    </span>
+                {% endif %}
+            </a>
+            <div class="profile"><a href="{{url_for('profile')}}">{{profile}}</a></div>
+            <span id="open-add-post" onclick="openModal()" class="display-5 btn btn-primary">&plus;Add Post</span>
+        </div>
+    </div>
+    <div class="home-content">
+        <div class="posts">
+            {% for post in posts %}
+            <div class="posts-info">
+                <div class="post-head">
+                    <span style="display: flex; gap: 2px; align-items: center; height: 50px;">
+                        <div style="margin: 0;" class="profile"><a href="{{url_for('user', username=post.author)}}">{{get_profile(post.author)}}</a> </div>
+                        <p style="margin: 0;" class="author">
+                            {% if post.author == session.username %}
+                            <strong>You</strong>
+                            {% elif post['is_anonymous'] == 1 %}
+                            <strong>Anonymous</strong>
+                            {% else %}
+                            <strong>@<a href="{{url_for('user', username=post.author)}}">{{post.author}}</a></strong>
+                            {% endif %}
+                        </p>
+                    </span>
+                    <p style="margin: 0;" class="author">{{post.category}}</p>
+                </div>
+                <h3 style="font-size: 22px; margin: 20px 0px 20px 10px; ">{{ post.title }} </h3>
+                
+                <p style="font-size: 20px;">{{post.body}}</p>
+                <span>
+                    {% if session.username != post.author %}
+                    <form action="/toggle_like/{{ post.id }}" method="POST">
+                        {% if get_liked(post.id) %}
+                            <button type="submit" class="btn btn-danger">👎<span>{{get_like_count(post.id)}}</span></button>
+                        {% else %}
+                            <button type="submit" class="btn btn-primary">👍<span>{{get_like_count(post.id)}}</span></button>
+                        {% endif %}
+                    </form>
+                    {% else %}
+                    {% endif %}
+                </span>
+                <a href="{{url_for('post', id=post.id)}}">View</a>
+            </div>
+            {% else %}
+            <p class="display-1 text-center">No Post Found</p>
+
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Modal Structure Add Post-->
+<div id="postModal" class="modal">
+    <div class="modal-content">
+        <span id="closePostModal" onclick="closeModal()" class="close">&times;</span>
+        <h1>Add Post</h1>
+        {% from "includes/_formhelpers.html" import render_field %}
+        <form method="POST" action="/add_post" enctype="multipart/form-data">
+            <div class="form-group">
+                {{ render_field(form.title, class_="form-control") }}
+            </div>
+            <div class="form-group">
+                {{ render_field(form.body, class_="form-control", id="editor") }}
+            </div>
+            <div class="form-group">
+                <label>Image</label>
+                <input type="file" class="form-control-file" name="image" accept="uploads/">
+            </div>
+            <div class="form-check">
+                {{ render_field(form.category, class_="radio" )}}
+            </div>
+            <div class="form-check">
+                {{ render_field(form.anonymous, class_="radio" )}}
+            </div>
+            <button class="btn btn-primary" type="submit">Post</button>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Structure Notifications-->
+<div id="notificationModal" class="modal">
+    <div class="modal-content">
+        <span id="closeNotificationModal" onclick="closeNotificationModal()" class="close">&times;</span>
+        <h1>Notifications</h1>
+        <div class="modal-body">
+            {% if notifications %}
+                {% for notification in notifications %}
+                    <span>{{notification.message}} <small class="text-muted">{{notification.timestamp}}</small></span>
+                {% endfor %}
+            {% else %}
+                <p class="display-6">No New Notifications</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

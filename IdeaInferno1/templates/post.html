@@ -20,9 +20,6 @@ Post {{post.title}}
         </h4>
     </div>
 
-    {% if post.file_path != None %}
-    <img src="{{ url_for('static_dir', path = 'uploads/'+post.file_path) }}" class="img" alt="...">
-    {% endif %}
     <div>
         <div class="post-body">
             {{post.body | safe}}
@@ -41,7 +38,12 @@ Post {{post.title}}
         </div>
         {% else %}
         {% endif %}
-
+        {% if post.file_path != None %}
+        <div class="img">
+            <img src="{{ url_for('static_dir', path = 'uploads/'+post.file_path) }}" class="img" alt="...">
+        </div>
+        {% endif %}
+        
         <div class="comments-section">
             <h2 class="display-6">Comments <span class="like">{{no_of_comments}}</span></h2>
             {% if session.username %}

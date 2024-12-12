@@ -14,6 +14,7 @@ UPLOAD_FOLDER = 'static/uploads/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg'}
 
+
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
@@ -62,6 +63,9 @@ def register():
         elif db_email_check:
             flash('Email Already Taken', 'danger')
             return redirect(url_for('register'))
+        elif not valid_email(email):
+            flash('Invalid Email', 'danger')
+            return redirect(url_for('register'))
         elif not prefernce:
             flash('Must Select a preference', 'danger')
             return redirect(url_for('register'))
@@ -99,7 +103,6 @@ def login():
             flash('Invalid Password', 'danger')
             return redirect(url_for('login'))
         else:
-            session['logged_in'] = True
             session['username'] = username
             session['id'] = result[0]['id']
             session['email'] = result[0]['email']

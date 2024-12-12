@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+
+{% block title %}
+User ({{user.username}})
+{% endblock %}
+
+{% block main %}
+<a href="{{url_for('home')}}" class="author"><-- Back</a>
+        <div id="main" class="page">
+            <div class="profile-home ">
+                <div class="profile-pic">
+                    {{profile}}
+                </div>
+                <div class="info">
+                    {% for user in user %}
+                    <div style="display: flex; justify-content: center; gap: 20px; align-items: center;">
+                        <span class="display-6">{{user.name}}</span>
+                        <a href="{{url_for('inboxchat', user_id=user.id)}}" class="notification-icon">
+                            <img src="/static/images/Message.png" class="notification-img" alt="">
+                        </a>
+                    </div>
+                    <span class="username"><strong>@{{user.username}}</strong>
+                        <form action="/toggle_follow/{{ user.id }}" method="POST">
+                            {% if is_following %}
+                            <button class="danger" type="submit">Unfollow</button>
+                            <span><small class="text-muted">Following</small></span>
+                            {% else %}
+                            <button type="submit">Follow</button>
+                            {% if follows_you %}
+                            <span><small class="text-muted">Follows you</small></span>
+                            {% endif %}
+                            {% endif %}
+                        </form>
+                    </span>
+                    {% endfor %}
+                    <div class="follow">
+                        <span style="cursor: pointer;">Followers
+                            <p class="text-center">{{followers_count}}</p>
+                        </span>
+                        <span style="cursor: pointer;">Following
+                            <p class="text-center">{{following_count}}</p>
+                        </span>
+                        <span id="post" style="cursor: pointer;">Posts
+                            <p class="text-center">{{post_count}}</p>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="posts" id="posted" style="display: none;">
+                {% for post in posts %}
+                <div class="posts-info text-center">
+                    <div class="post-head">
+                        <h3 class="display-6">{{ post.title }} </h3>
+                        <p class="author">
+                            By
+                            {% if post.author == session.username %}
+                            <strong>You</strong>
+                            {% elif post['is_anonymous'] == 1 %}
+                            <strong>Anonymous</strong>
+                            {% else %}
+                            <strong>@<a href="{{url_for('user', username=post.author)}}">{{post.author}}</a></strong>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <p class="display-6">Category: <small>{{post.category}}</small> </p>
+                    <a href="{{url_for('post', id=post.id)}}">View</a>
+                </div>
+                {% else %}
+                <p class="display-5 text-center">No Post Found</p>
+
+                {% endfor %}
+            </div>
+
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+Post ({{post.title}})
+{% endblock %}
+
+{% block main %}
+<div class="page home">
+
+    <div class="post-head">
+        <a href="{{url_for('home')}}" class="author"><-- Back</a>
+        <h1 class="display-6">{{post.title}} <small>likes: <span class="like">{{like_count}}</span></small></h1>
+        <h4>By:
+            {% if post.author == session.username %}
+            <span class="author">You</span>
+            {% elif post['is_anonymous'] == 1 %}
+            <span class="author">anonymous user</span>
+            {% else %}
+            <span class="author">@<a href="{{url_for('user', username=post.author)}}">{{post.author}}</a></span>
+            {% endif %}
+        </h4>
+    </div>
+
+    <div>
+        <div class="post-body">
+            {{post.body | safe}}
+        </div>
+        <hr>
+        {% if session.username != post.author %}
+        <form action="/toggle_like/{{ post.id }}" method="POST">
+            {% if user_liked %}
+                <button type="submit" class="btn btn-danger">👎<span>{{like_count}}</span></button>
+            {% else %}
+                <button type="submit" class="btn btn-primary">👍<span>{{like_count}}</span></button>
+            {% endif %}
+        </form>
+        {% else %}
+        {% endif %}
+        {% if post.file_path != None %}
+        <div class="img">
+            <img src="{{ url_for('static_dir', path = 'uploads/'+post.file_path) }}" class="img" alt="...">
+        </div>
+        {% endif %}
+
+        <div class="comments-section">
+            <h2 class="display-6">Comments <span class="like">{{no_of_comments}}</span></h2>
+            {% if session.username %}
+            <div style="display: flex; justify-content: space-between; align-items: center;"></div>
+                <form style="width: 100%;" action="{{url_for('add_comment')}}" class="action"
+                    method="post">
+                    <textarea required name="text" id="message2-input" placeholder="Type your message..."></textarea>
+                    <input type="hidden" name="post_id" value="{{post.id}}">
+                    <button type="submit" class="notification-icon">
+                        <span class="notification-img">
+                            <img src="/static/images/Send Email.png" alt="">
+                        </span>
+                    </button>
+                </form>
+            </div>
+            <!-- <form action="{{url_for('add_comment')}}" method="post">
+                <div class="form-group form">
+                    <input class="form-control" type="text" name="text" placeholder="Add a comment...">
+                    <input type="hidden" name="post_id" value="{{post.id}}">
+                    <button class="btn btn-primary" type="submit">Comment</button>
+                </div>
+            </form> -->
+            {% endif %}
+            <div id="comments-container">
+                {% for comment in comments %}
+                    <div class="comment">
+                        <p>{{comment.content}}</p>
+                        {% if comment.user_name == session.username %}
+                        <p>By <span class="author">You</span></p>
+                        {% else %}
+                        <p>By <span class="author">@<a href="{{url_for('user', username=comment.user_name)}}">{{comment.user_name}}</a></span></p>
+
+                        {% endif %}
+                    </div>
+                {% else %}
+                <p>No Comments Yet</p>
+                {% endfor %}
+            </div>
+        </div>
+        <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+    </div>
+</div>
+{% endblock %}

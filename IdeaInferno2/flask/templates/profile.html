@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Profile ({{user.username}})
+{% endblock %}
+
+{% block main %}
+<a href="{{url_for('home')}}" class="author"><-- Back</a>
+        <div id="main2" class="page">
+            <a href="#" class="author">Edit Profile</a>
+            <div class="profile-home ">
+                <div class="profile-pic">
+                    {{profile}}
+                </div>
+                <div class="info">
+                    {% for user in user %}
+                    <span class="display-6">{{user.name}}</span>
+                    <span class="username"><strong>@{{user.username}}</strong></span>
+                    {% endfor %}
+                    <div class="follow">
+                        <span style="cursor: pointer;">Followers
+                            <p class="text-center">{{followers_count}}</p>
+                        </span>
+                        <span style="cursor: pointer;">Following
+                            <p class="text-center">{{following_count}}</p>
+                        </span>
+                        <span onclick="togglePost()" style="cursor: pointer;" id="post2">Posts
+                            <p class="text-center">{{post_count}}</p>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="posts" id="posted2" style="display: none;">
+                {% for post in posts %}
+                <div class="posts-info text-center">
+                    <div class="post-head">
+                        <h3 class="display-6">{{ post.title }} </h3>
+                        <p class="author">
+                            By
+                            {% if post.author == session.username %}
+                            <strong>You</strong>
+                            {% elif post['is_anonymous'] == 1 %}
+                            <strong>Anonymous</strong>
+                            {% else %}
+                            <strong>@<a href="{{url_for('user', username=post.author)}}">{{post.author}}</a></strong>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <p class="display-6">Category: <small>{{post.category}}</small> </p>
+                    <a href="{{url_for('post', id=post.id)}}">View</a>
+                </div>
+                {% else %}
+                <p class="display-5 text-center">No Post Found</p>
+
+                {% endfor %}
+            </div>
+        </div>
+{% endblock %}

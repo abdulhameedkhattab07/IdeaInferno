@@ -1,0 +1,241 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Inbox
+{% endblock %}
+
+{% block main %}
+<div class="page inbox">
+    <div class="post-head bg-light">
+        <a href="{{url_for('home')}}" class="author"><-- Back</a>
+    </div>
+    <div id="inbox-container">
+        <div id="followed-users">
+            <h1>Inbox</h1>
+            {% if senders %}
+            <ul>
+                {% for follow in senders %}
+                <a data-user-id="{{follow.id}}" onclick="markRead(this)" class="inbox" href="{{url_for('inboxchat', user_id=follow.id)}}">
+                    <li>
+                        {{ follow.username }}
+                        <div style="display: flex; align-items: center;">
+                            <span style="color: #727070;">
+                                {{ follow.last_message }} {% if follow.file_url %}Attachment{% endif %}
+                            </span>
+                            {% if follow.unread_count %}
+                            <span id="messageBadge-{{follow.id}}" style="color: #fff; position: absolute; left: 350px; background: red; height: 20px; width: 20px; border-radius: 50%; display: inline-flex; justify-content: center; align-items: center;">
+                                {{get_unread(follow.id)}}
+                            </span>
+                            {% endif %}
+                        </div>
+                    </li>
+                </a>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="diplay-6">Empty Inbox</p>
+            {% endif %}
+
+            <h2>Following</h2>
+            {% if follows %}
+            <ul>
+                {% for follow in follows %}
+                {% if follow.username == session['username'] %}
+                {% else %}
+                <a class="inbox" href="{{url_for('inboxchat', user_id=follow.followed_id)}}">
+                    <li>
+                        {{ follow.followed_name }}
+                    </li>
+                </a>
+                {% endif %}
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="diplay-6">No Following</p>
+            {% endif %}
+        </div>
+
+
+        <div id="chat-container">
+            {% if current %}
+            <div class="post-head bg-light" style="font-size: 20px;">
+                <a href="{{url_for('inbox')}}" style="border-radius: 10px; padding: 0px; border: 1px solid #ccc;"><-- Back</a>
+                {{current.username}}
+            </div>
+            <div id="chat-messages">
+                {% if messages %}
+                {% for message in messages %}
+                <div class="{% if message.sender_id == session['id'] %}sent{% else %}received{% endif %}">
+                    {% if message.file_url %}
+                        {% set file_ext = message.file_url.split('.')[-1].lower() %}
+                    
+                        {% if file_ext in ['jpg', 'jpeg', 'png', 'gif'] %}
+                            <!-- Display image -->
+                            <img src="{{ url_for('static_dir', path = 'uploads/'+message.file_url) }}" alt="Image" width="380px" height="auto" style="max-width: 400px; cursor: pointer; margin-bottom: 20px;" onclick="openImageModal(`{{ url_for('static_dir', path = 'uploads/'+message.file_url) }}'`)">
+                    
+                        {% elif file_ext == 'mp4' %}
+                            <!-- Display video -->
+                            <video controls style="max-width: 300px;">
+                                <source src="{{ url_for('static_dir', path = 'uploads/'+message.file_url) }}" }}" type="video/{{ file_ext }}">
+                            </video>
+                    
+                        {% elif file_ext == 'pdf' %}
+                            <!-- Link to PDF -->
+                            <a href="{{ url_for('static_dir', path = 'uploads/'+post.message_url) }}" target="_blank">View PDF</a>
+                    
+                        {% endif %}
+                    {% endif %}
+                    <span style="display: flex; justify-content: space-between;">{{ message.content }} 
+                        {% if message.sender_id == session['id'] %}
+                            <form action="{{url_for('del_message', id=message.id)}}" method="post">
+                                <button style="margin: 0; border: 0;" class="notification-img" type="submit">Del</button>
+                            </form>
+                        {% endif %}</span>
+                    <small>{{ message.timestamp }}</small>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p class="display-6 text-center">No Message Yet</p>
+                {% endif %}
+            </div>
+            <div>
+                <form style="display: flex; justify-content: space-between; align-items: center;" style="width: 100%;" action="{{url_for('send_message', id=current.id)}}" class="action" enctype="multipart/form-data" method="post">
+                    <textarea name="content" id="message-input" placeholder="Type your message..."></textarea>
+                    <span>
+                        <ul id="file-options" style="display: none; z-index: 1; position: absolute; top: 450px; right: 400px; list-style-type: none; border: 1px solid #ccc; background: #727070; color: #fff; width: 450px; padding: 20px;">
+                            <p style="margin: 0;">Choose One</p>
+                            <li><input type="file" name="file" accept="image/*"> Image</li>
+                            <!-- <li><input type="file" name="file" accept="video/*"> Video</li>
+                            <li><input type="file" name="file" accept="application/pdf"> PDF</li> -->
+                        </ul>
+                        <button style="font-size: 30px;" class="notification-icon" type="button" id="add-button" onclick="toggleFileOptions()">+</button>
+                    </span>
+                    <span onclick="openEmojiModal()" class="notification-icon" id="toggle-emoji-picker">
+                        <button type="button" class="notification-img">&#128540;</button>
+                    </span>
+                    <button type="submit"  class="notification-img" style="border: none; padding: 10px; border-radius: 50%;">
+                        <img src="/static/images/Send Email.png" alt="">
+                    </button>
+                </form>
+            </div>
+            {% else %}
+            <p class="display-6 text-center">Select a Message</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Modal Structure Emoji Modal-->
+<div id="emojiModal" class="modal">
+    <div class="modal-content">
+        <span id="closeEmojiModal" onclick="closeEmojiModal()" class="close">&times;</span>
+        <h1>Emojis</h1>
+        <div class="modal-body">
+            <h2>Smileys</h2>
+            <div class="emoji-div">
+                <p class="emoji" data-emoji="&#128512;">&#128512;</p>
+                <p class="emoji" data-emoji="&#128513;">&#128513;</p>
+                <p class="emoji" data-emoji="&#128514;">&#128514;</p>
+                <p class="emoji" data-emoji="&#128515;">&#128515;</p>
+                <p class="emoji" data-emoji="&#128516;">&#128516;</p>
+                <p class="emoji" data-emoji="&#128517;">&#128517;</p>
+                <p class="emoji" data-emoji="&#128518;">&#128518;</p>
+                <p class="emoji" data-emoji="&#128519;">&#128519;</p>
+                <p class="emoji" data-emoji="&#128520;">&#128520;</p>
+                <p class="emoji" data-emoji="&#128521;">&#128521;</p>
+                <p class="emoji" data-emoji="&#128522;">&#128522;</p>
+                <p class="emoji" data-emoji="&#128523;">&#128523;</p>
+                <p class="emoji" data-emoji="&#128524;">&#128524;</p>
+                <p class="emoji" data-emoji="&#128525;">&#128525;</p>
+                <p class="emoji" data-emoji="&#128526;">&#128526;</p>
+                <p class="emoji" data-emoji="&#128527;">&#128527;</p>
+                <p class="emoji" data-emoji="&#128528;">&#128528;</p>
+                <p class="emoji" data-emoji="&#128529;">&#128529;</p>
+                <p class="emoji" data-emoji="&#128530;">&#128530;</p>
+                <p class="emoji" data-emoji="&#128531;">&#128531;</p>
+                <p class="emoji" data-emoji="&#128532;">&#128532;</p>
+                <p class="emoji" data-emoji="&#128533;">&#128533;</p>
+                <p class="emoji" data-emoji="&#128534;">&#128534;</p>
+                <p class="emoji" data-emoji="&#128535;">&#128535;</p>
+                <p class="emoji" data-emoji="&#128536;">&#128536;</p>
+                <p class="emoji" data-emoji="&#128537;">&#128537;</p>
+                <p class="emoji" data-emoji="&#128538;">&#128538;</p>
+                <p class="emoji" data-emoji="&#128539;">&#128539;</p>
+                <p class="emoji" data-emoji="&#128540;">&#128540;</p>
+                <p class="emoji" data-emoji="&#128541;">&#128541;</p>
+                <p class="emoji" data-emoji="&#128542;">&#128542;</p>
+                <p class="emoji" data-emoji="&#128543;">&#128543;</p>
+                <p class="emoji" data-emoji="&#128544;">&#128544;</p>
+                <p class="emoji" data-emoji="&#128545;">&#128545;</p>
+                <p class="emoji" data-emoji="&#128546;">&#128546;</p>
+                <p class="emoji" data-emoji="&#128547;">&#128547;</p>
+            </div>
+            <h2>Person</h2>
+            <div class="emoji-div">
+                <p class="emoji" data-emoji="&#128110;">&#128110;</p>
+                <p class="emoji" data-emoji="&#128111;">&#128111;</p>
+                <p class="emoji" data-emoji="&#128112;">&#128112;</p>
+                <p class="emoji" data-emoji="&#128113;">&#128113;</p>
+                <p class="emoji" data-emoji="&#128114;">&#128114;</p>
+                <p class="emoji" data-emoji="&#128115;">&#128115;</p>
+                <p class="emoji" data-emoji="&#128119;">&#128119;</p>
+                <p class="emoji" data-emoji="&#128120;">&#128120;</p>
+                <p class="emoji" data-emoji="&#128372;">&#128372;</p>
+            </div>
+            <h2>Weather</h2>
+            <div class="emoji-div">
+                <p class="emoji" data-emoji="&#9925;">&#9925;</p>
+                <p class="emoji" data-emoji="&#9728;">&#9728;</p>
+                <p class="emoji" data-emoji="&#127748;">&#127748;</p>
+                <p class="emoji" data-emoji="&#127749;">&#127749;</p>
+                <p class="emoji" data-emoji="&#127781;">&#127781;</p>
+                <p class="emoji" data-emoji="&#127782;">&#127782;</p>
+                <p class="emoji" data-emoji="&#127783;">&#127783;</p>
+                <p class="emoji" data-emoji="&#127784;">&#127784;</p>
+                <p class="emoji" data-emoji="&#127785;">&#127785;</p>
+            </div>
+            <h2>Entertainment</h2>
+            <div class="emoji-div">
+                <p class="emoji" data-emoji="&#127872;">&#127872;</p>
+                <p class="emoji" data-emoji="&#127873;">&#127873;</p>
+                <p class="emoji" data-emoji="&#127874;">&#127874;</p>
+                <p class="emoji" data-emoji="&#127875;">&#127875;</p>
+                <p class="emoji" data-emoji="&#127876;">&#127876;</p>
+                <p class="emoji" data-emoji="&#127877;">&#127877;</p>
+                <p class="emoji" data-emoji="&#127878;">&#127878;</p>
+                <p class="emoji" data-emoji="&#127879;">&#127879;</p>
+                <p class="emoji" data-emoji="&#127982;">&#127982;</p>
+            </div>
+            <h2>Money Symbols</h2>
+            <div class="emoji-div">
+                <p class="emoji" data-emoji="&#128176;">&#128176;</p>
+                <p class="emoji" data-emoji="&#128177;">&#128177;</p>
+                <p class="emoji" data-emoji="&#128178;">&#128178;</p>
+                <p class="emoji" data-emoji="&#128179;">&#128179;</p>
+                <p class="emoji" data-emoji="&#128180;">&#128180;</p>
+                <p class="emoji" data-emoji="&#128181;">&#128181;</p>
+                <p class="emoji" data-emoji="&#128182;">&#128182;</p>
+                <p class="emoji" data-emoji="&#128183;">&#128183;</p>
+                <p class="emoji" data-emoji="&#128184;">&#128184;</p>
+                <p class="emoji" data-emoji="&#128185;">&#128185;</p>
+            </div>
+            <h2>Religious Symbols</h2>
+            <div class="emoji-div">
+                <p class="emoji" data-emoji="&#128255;">&#128255;</p>
+                <p class="emoji" data-emoji="&#128331;">&#128331;</p>
+                <p class="emoji" data-emoji="&#128332;">&#128332;</p>
+                <p class="emoji" data-emoji="&#128333;">&#128333;</p>
+                <p class="emoji" data-emoji="&#128334;">&#128334;</p>
+                <p class="emoji" data-emoji="&#128255;">&#128255;</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Structure Image-->
+<div id="imageModal" class="modal">
+    <div id="modalImage" class="modal-content">
+        <span id="closeImageModal" onclick="closeImageModal()" class="close">&times;</span>
+    </div>
+</div>
+{% endblock %}

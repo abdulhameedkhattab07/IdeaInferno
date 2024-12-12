@@ -1,0 +1,455 @@
+.radio {
+    align-items: center;
+    display: flex;
+    gap: 10px;
+    list-style-type: none;
+    list-style: none;
+    text-decoration: none;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    margin-bottom: 20px;
+}
+
+a{
+    text-decoration: none;
+}
+
+button {
+    margin-top: 10px;
+    margin-top: 10px;
+}
+
+.page {
+    margin-top: 20px;
+    padding: 15px 1px 1px 10px;
+    border: 1px solid #ccc;
+}
+
+.img{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ccc;
+    padding: 20px;
+}
+
+.img img{
+    width: 700px;
+    height: auto;
+}
+
+.home {
+    height: 150vh;
+    position: relative;
+    overflow-y: scroll;
+}
+
+.nav {
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    position: sticky;
+    z-index: 1;
+    gap: 5px;
+}
+
+.profile{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+    color: #fff;
+    margin: 10px;
+    background: #0d6efd;
+    cursor: pointer;
+}
+
+.profile a{
+    color: #fff;
+    text-decoration: none;
+}
+
+.posts {
+    padding: 40px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.posts-info {
+    position: relative;
+    line-height: 1.5;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    height: 300px;
+    box-shadow: 2px 4px 16px rgba(0, 0, 0, .1);
+    margin-bottom: 30px;
+}
+
+.post-head {
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    top: 0;
+}
+
+.author {
+    font-size: 20px;
+    border: 1px solid #ccc;
+    /* padding: 3px; */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+}
+
+.like{
+    font-size: 20px;
+    padding: 10px;
+    border-radius: 100px;
+    border: 1px solid #ccc;
+}
+
+.post-body {
+    margin-top: 20px;
+    border-top: 1px solid #000;
+    padding: 20px;
+}
+
+.comments-section {
+    margin-top: 20px;
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+}
+
+.form{
+    display: flex;
+    align-items: center;
+    height: 50px;
+}
+
+.form button{
+    margin: 0;
+}
+
+.comment{
+    margin: 10px;
+    height: 50px;
+    padding: 20px;
+    background: #f0efef;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.comment p{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* Modals */
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+#loginModal .modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    width: 500px;
+    border-radius: 5px;
+    position: relative;
+}
+
+#registerModal .modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    width: 500px;
+    border-radius: 5px;
+    position: relative;
+}
+
+#postModal .modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    width: 500px;
+    border-radius: 5px;
+    position: relative;
+}
+
+#notificationModal .modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    width: 600px;
+    border-radius: 5px;
+    position: relative;
+}
+
+#emojiModal .modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    width: 600px;
+    border-radius: 5px;
+    position: relative;
+}
+
+#imageModal #modalImage {
+    margin: auto;
+    max-width: 700px;
+    width: 80%;
+    height: 80vh;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 5px;
+}
+
+#emoji2Modal .modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    width: 600px;
+    border-radius: 5px;
+    position: relative;
+}
+
+.emoji-div{
+    display: flex;
+    cursor: pointer;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.emoji{
+    padding: 5px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    font-size: 24px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+#open-login, #open-signup, #open-add-post, #toggle-emoji-picker{
+    cursor: pointer;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 35px;
+}
+
+.profile-home{
+    margin-top: 10px;
+    padding: 20px;
+    display: flex;
+    gap: 50px;
+}
+
+.profile-home .info{
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    gap: 13px;
+}
+
+.username{
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.username button{
+    border: none;
+    background: #0d6efd;
+    color: #fff;
+    margin-left: 20px;
+}
+
+.username .danger{
+    background: #fd110d;
+}
+
+.profile-home .info .follow{
+    margin-top: 8px;
+    display: flex;
+    gap: 20px;
+    font-size: 20px;
+}
+
+.profile-pic{
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    background: #0d6efd;
+    color: #fff;
+    font-size: 80px;
+}
+
+.notification-icon {
+    position: relative;
+    color: #333;
+    text-decoration: none;
+    display: block;
+}
+
+.notification-icon .notification-img {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 5px;
+    border: 1px solid #ccc;
+}
+
+.notification-img img{
+    height: 30px;
+    width: 30px;
+}
+
+.notification-icon .badge {
+    position: absolute;
+    top: -3px;
+    right: -2px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 5px 7px;
+    font-size: 14px;
+}
+
+.notification-icon .badge2 {
+    position: absolute;
+    top: -3px;
+    right: -2px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 5px 7px;
+    font-size: 14px;
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.modal-body span{
+    background: #ccc;
+    padding: 3px;
+    font-size: 20px;
+}
+
+#inbox-container {
+    display: flex;
+}
+
+#followed-users {
+    width: 25%;
+    border-right: 1px solid #ddd;
+    padding: 10px;
+    height: 450px;
+    overflow-y: scroll;
+}
+
+#followed-users ul{
+    list-style-type: none;
+    margin-left: -30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    right: 30px;
+}
+
+#followed-users .inbox{
+    text-decoration: none;
+    margin: 0;
+    background: #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 8px;
+    padding: 8px;
+    left: 20px;
+}
+
+#chat-container {
+    width: 75%;
+    padding: 10px;
+}
+
+#chat-messages {
+    height: 400px;
+    overflow-y: scroll;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+textarea {
+    padding: 10px;
+    width: 100%;
+    height: 50px;
+}
+
+.action{
+    display: flex;
+    gap: 10px;
+}
+
+.action .notification-icon{
+    border: none;
+    margin: 0;
+    background: none;
+}
+
+#chat-messages div{
+    padding: 10px;
+    position: relative;
+    margin-bottom: 20px;
+    background: lightgray;
+    width: 400px;
+    height: auto;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+}
+
+#chat-messages div small{
+    text-align: right;
+}
+
+#chat-messages .sent{
+    background: lightgreen;
+    left: 350px;
+}

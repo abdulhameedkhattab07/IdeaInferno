@@ -1,0 +1,9 @@
+IdeaInferno1/__pycache__
+IdeaInferno1/idea.db
+IdeaInferno1/static/uploads
+
+IdeaInferno2/flask/__pycache__
+IdeaInferno2/flask/.vscode
+IdeaInferno2/flask/idea.db
+IdeaInferno2/flask/static/uploads
+
